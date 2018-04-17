@@ -16,16 +16,16 @@ var orm = {
             console.log(result);
         });
     },
-    createOne: function (vals, cb) {
-        var queryString = "INSERT INTO burgers (burger_name) values(?)";
 
+    createOne: function (table, cols, val, cb) {
+        //var queryString = "INSERT INTO burgers (burger_name) values(?)";
         
+         var queryString = `
+         INSERT INTO ${table}(${cols.toString}) VALUES(${printQuestionMarks(vals.length)})
+         `
+        console.log(queryString);
 
-        // var newQueryString = `
-        // INSERT INTO ${table}(${cols.toSString}) VALUES(${printQuestionMarks(vals.length)})
-        // `
-
-        connection.query(queryString, vals, function (err, result) {
+        connection.query(queryString, function (err, result) {
             if (err) {
                 throw err;
             }
@@ -33,17 +33,18 @@ var orm = {
             cb(result);
         });
     },
-    updateOne: function (val,cb) {
+
+    updateOne: function (table, vals, condition, cb) {
         var queryString = "UPDATE burgers SET devoured = 1 where id = ?"; // UPDATE burgers
 
        
 
-        connection.query(queryString,[val],function (err, result) {
+        connection.query(queryString, function (err, result) {
             if (err) {
-                throw err;
+                throw cb(result); err;
             }
 
-            cb(result);
+           
         });
     },
     
